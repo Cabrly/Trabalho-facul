@@ -1,0 +1,496 @@
+/* =========================
+   RESET
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Noto Sans JP", Arial, sans-serif;
+    background: #f7f7f5;
+    color: #171717;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+    height: 80px;
+    background: #ffffff;
+    border-bottom: 1px solid #dedede;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 5%;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-jp {
+    background: #c90016;
+    color: white;
+
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+    font-weight: 700;
+
+    border-radius: 50%;
+}
+
+.logo h1 {
+    font-size: 19px;
+    letter-spacing: 3px;
+}
+
+.logo p {
+    font-size: 11px;
+    color: #777;
+    letter-spacing: 1px;
+}
+
+
+/* =========================
+   BOTÃO
+========================= */
+
+.add-task {
+    background: #c90016;
+    color: white;
+
+    border: none;
+    border-radius: 5px;
+
+    padding: 11px 18px;
+
+    font-family: inherit;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.add-task span {
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+.add-task:hover {
+    background: #a90012;
+}
+
+
+/* =========================
+   CONTAINER
+========================= */
+
+.container {
+    width: 90%;
+    max-width: 1400px;
+    margin: 40px auto;
+}
+
+
+/* =========================
+   INTRO
+========================= */
+
+.intro {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+
+    margin-bottom: 35px;
+}
+
+.tag {
+    color: #c90016;
+    font-size: 12px;
+    font-weight: 700;
+
+    letter-spacing: 2px;
+}
+
+.intro h2 {
+    font-size: 30px;
+    margin: 7px 0;
+}
+
+.intro p {
+    color: #777;
+    max-width: 600px;
+    font-size: 14px;
+}
+
+
+/* =========================
+   PROGRESSO
+========================= */
+
+.progress {
+    width: 220px;
+}
+
+.progress span {
+    font-size: 12px;
+    color: #777;
+}
+
+.progress strong {
+    float: right;
+    font-size: 13px;
+}
+
+.progress-bar {
+    height: 6px;
+    background: #dedede;
+
+    margin-top: 8px;
+
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    width: 35%;
+    height: 100%;
+    background: #c90016;
+}
+
+
+/* =========================
+   KANBAN
+========================= */
+
+.kanban {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+}
+
+.column {
+    background: #eeeeec;
+
+    border: 1px solid #dedede;
+    border-radius: 8px;
+
+    padding: 18px;
+
+    min-height: 500px;
+}
+
+
+/* =========================
+   CABEÇALHO DA COLUNA
+========================= */
+
+.column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 18px;
+}
+
+.column-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.column-title h3 {
+    font-size: 15px;
+}
+
+.status {
+    width: 9px;
+    height: 9px;
+
+    border-radius: 50%;
+}
+
+.status.black {
+    background: #171717;
+}
+
+.status.red {
+    background: #c90016;
+}
+
+.status.done {
+    background: #777;
+}
+
+.task-count {
+    background: white;
+
+    border: 1px solid #ddd;
+
+    padding: 2px 8px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+}
+
+
+/* =========================
+   CARDS
+========================= */
+
+.tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.task {
+    background: white;
+
+    border: 1px solid #dedede;
+    border-radius: 6px;
+
+    padding: 16px;
+
+    transition: 0.2s;
+}
+
+.task:hover {
+    transform: translateY(-2px);
+
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
+}
+
+.task.active {
+    border-left: 4px solid #c90016;
+}
+
+.task.completed {
+    opacity: 0.65;
+}
+
+.task-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 10px;
+}
+
+.priority {
+    font-size: 10px;
+    font-weight: 700;
+
+    padding: 4px 8px;
+
+    border-radius: 3px;
+}
+
+.priority.high {
+    color: #c90016;
+    background: #fbe5e7;
+}
+
+.priority.medium {
+    color: #8a5a00;
+    background: #fff3d6;
+}
+
+.priority.low {
+    color: #555;
+    background: #eeeeee;
+}
+
+.priority.done-tag {
+    color: #27733c;
+    background: #e3f3e7;
+}
+
+.menu {
+    border: none;
+    background: transparent;
+
+    color: #999;
+
+    cursor: pointer;
+
+    letter-spacing: 2px;
+}
+
+.task h4 {
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.task p {
+    color: #777;
+
+    font-size: 12px;
+    line-height: 1.5;
+
+    margin-bottom: 15px;
+}
+
+.task-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    color: #888;
+
+    font-size: 10px;
+}
+
+.avatar {
+    width: 25px;
+    height: 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #171717;
+    color: white;
+
+    border-radius: 50%;
+
+    font-size: 10px;
+    font-weight: bold;
+}
+
+
+/* =========================
+   ADICIONAR TAREFA
+========================= */
+
+.add-column-task {
+    width: 100%;
+
+    margin-top: 15px;
+    padding: 10px;
+
+    border: 1px dashed #bbb;
+    background: transparent;
+
+    color: #777;
+
+    border-radius: 5px;
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    transition: 0.2s;
+}
+
+.add-column-task:hover {
+    background: white;
+    color: #c90016;
+    border-color: #c90016;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    text-align: center;
+
+    padding: 20px;
+
+    color: #999;
+
+    font-size: 11px;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+
+    .kanban {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .intro {
+        align-items: start;
+        gap: 30px;
+    }
+
+    .progress {
+        min-width: 180px;
+    }
+}
+
+
+/* =========================
+   CELULAR
+========================= */
+
+@media (max-width: 650px) {
+
+    .header {
+        height: auto;
+
+        padding: 15px 5%;
+
+        gap: 15px;
+    }
+
+    .logo h1 {
+        font-size: 16px;
+    }
+
+    .add-task {
+        padding: 9px 12px;
+        font-size: 11px;
+    }
+
+    .container {
+        width: 92%;
+        margin-top: 25px;
+    }
+
+    .intro {
+        flex-direction: column;
+        align-items: stretch;
+
+        margin-bottom: 25px;
+    }
+
+    .intro h2 {
+        font-size: 23px;
+    }
+
+    .progress {
+        width: 100%;
+    }
+
+    .kanban {
+        grid-template-columns: 1fr;
+    }
+
+    .column {
+        min-height: auto;
+    }
+}

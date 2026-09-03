@@ -1,184 +1,254 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quadro de tarefas acadêmicas</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanban | Kaizen</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <header>
-    <h1>Quadro de tarefas acadêmicas</h1>
-  </header>
 
-  <main>
-    <section aria-labelledby="busca-filtros-titulo">
-      <h2 id="busca-filtros-titulo">Busca e filtros</h2>
+    <header class="header">
+        <div class="logo">
+            <span class="logo-jp">改善</span>
+            <div>
+                <h1>KAIZEN</h1>
+                <p>Kanban Board</p>
+            </div>
+        </div>
 
-      <form>
-        <p>
-          <label for="busca">Buscar pelo título da tarefa</label>
-          <input type="search" id="busca" name="busca">
-        </p>
+        <button class="add-task">
+            <span>+</span> Nova tarefa
+        </button>
+    </header>
 
-        <fieldset>
-          <legend>Filtrar por status</legend>
+    <main class="container">
 
-          <input type="radio" id="status-todos" name="status" value="todos" checked>
-          <label for="status-todos">Todos</label>
+        <section class="intro">
+            <div>
+                <span class="tag">今日の仕事</span>
+                <h2>Organize seu fluxo de trabalho</h2>
+                <p>
+                    Pequenos passos, grandes resultados.
+                    Organize suas tarefas seguindo o princípio Kaizen.
+                </p>
+            </div>
 
-          <input type="radio" id="status-a-fazer" name="status" value="a-fazer">
-          <label for="status-a-fazer">A fazer</label>
+            <div class="progress">
+                <span>Progresso</span>
+                <strong>35%</strong>
 
-          <input type="radio" id="status-em-andamento" name="status" value="em-andamento">
-          <label for="status-em-andamento">Em andamento</label>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+        </section>
 
-          <input type="radio" id="status-em-revisao" name="status" value="em-revisao">
-          <label for="status-em-revisao">Em revisão</label>
 
-          <input type="radio" id="status-concluida" name="status" value="concluida">
-          <label for="status-concluida">Concluída</label>
-        </fieldset>
+        <section class="kanban">
 
-        <fieldset>
-          <legend>Filtrar por prioridade</legend>
+            <!-- A FAZER -->
+            <div class="column">
 
-          <input type="radio" id="prioridade-todas" name="prioridade" value="todas" checked>
-          <label for="prioridade-todas">Todas</label>
+                <div class="column-header">
+                    <div class="column-title">
+                        <span class="status black"></span>
+                        <h3>A fazer</h3>
+                    </div>
 
-          <input type="radio" id="prioridade-baixa" name="prioridade" value="baixa">
-          <label for="prioridade-baixa">Baixa</label>
+                    <span class="task-count">3</span>
+                </div>
 
-          <input type="radio" id="prioridade-media" name="prioridade" value="media">
-          <label for="prioridade-media">Média</label>
+                <div class="tasks">
 
-          <input type="radio" id="prioridade-alta" name="prioridade" value="alta">
-          <label for="prioridade-alta">Alta</label>
-        </fieldset>
+                    <article class="task">
+                        <div class="task-top">
+                            <span class="priority high">Alta</span>
+                            <button class="menu">•••</button>
+                        </div>
 
-        <button type="submit">Aplicar filtros</button>
-        <button type="reset">Limpar filtros</button>
-      </form>
-    </section>
+                        <h4>Estruturar página inicial</h4>
 
-    <section aria-labelledby="quadro-titulo">
-      <h2 id="quadro-titulo">Visão do quadro</h2>
+                        <p>
+                            Criar a estrutura principal do projeto.
+                        </p>
 
-      <section aria-labelledby="a-fazer-titulo">
-        <h3 id="a-fazer-titulo">A fazer</h3>
-        <ul>
-          <li>
-            <article>
-              <h4>Definir requisitos do sistema</h4>
-              <dl>
-                <dt>Projeto</dt><dd>Portal acadêmico</dd>
-                <dt>Responsável</dt><dd>Vitor</dd>
-                <dt>Prazo</dt><dd><time datetime="2026-08-18">18/08/2026</time></dd>
-                <dt>Prioridade</dt><dd>Alta</dd>
-              </dl>
-            </article>
-          </li>
-          <li>
-            <article>
-              <h4>Pesquisar referências bibliográficas</h4>
-              <dl>
-                <dt>Projeto</dt><dd>Artigo de IHC</dd>
-                <dt>Responsável</dt><dd>Marina</dd>
-                <dt>Prazo</dt><dd><time datetime="2026-08-22">22/08/2026</time></dd>
-                <dt>Prioridade</dt><dd>Média</dd>
-              </dl>
-            </article>
-          </li>
-        </ul>
-      </section>
+                        <div class="task-footer">
+                            <span>📅 05 Set</span>
+                            <span class="avatar">L</span>
+                        </div>
+                    </article>
 
-      <section aria-labelledby="em-andamento-titulo">
-        <h3 id="em-andamento-titulo">Em andamento</h3>
-        <ul>
-          <li>
-            <article>
-              <h4>Criar estrutura semântica da página</h4>
-              <dl>
-                <dt>Projeto</dt><dd>Gerenciador de tarefas</dd>
-                <dt>Responsável</dt><dd>Vitor</dd>
-                <dt>Prazo</dt><dd><time datetime="2026-08-12">12/08/2026</time></dd>
-                <dt>Prioridade</dt><dd>Alta</dd>
-              </dl>
-            </article>
-          </li>
-          <li>
-            <article>
-              <h4>Modelar banco de dados</h4>
-              <dl>
-                <dt>Projeto</dt><dd>Biblioteca digital</dd>
-                <dt>Responsável</dt><dd>Lucas</dd>
-                <dt>Prazo</dt><dd><time datetime="2026-08-20">20/08/2026</time></dd>
-                <dt>Prioridade</dt><dd>Média</dd>
-              </dl>
-            </article>
-          </li>
-        </ul>
-      </section>
 
-      <section aria-labelledby="em-revisao-titulo">
-        <h3 id="em-revisao-titulo">Em revisão</h3>
-        <ul>
-          <li>
-            <article>
-              <h4>Revisar relatório de laboratório</h4>
-              <dl>
-                <dt>Projeto</dt><dd>Experimentos de redes</dd>
-                <dt>Responsável</dt><dd>Camila</dd>
-                <dt>Prazo</dt><dd><time datetime="2026-08-15">15/08/2026</time></dd>
-                <dt>Prioridade</dt><dd>Alta</dd>
-              </dl>
-            </article>
-          </li>
-          <li>
-            <article>
-              <h4>Conferir roteiro da apresentação</h4>
-              <dl>
-                <dt>Projeto</dt><dd>Seminário de acessibilidade</dd>
-                <dt>Responsável</dt><dd>Rafael</dd>
-                <dt>Prazo</dt><dd><time datetime="2026-08-19">19/08/2026</time></dd>
-                <dt>Prioridade</dt><dd>Baixa</dd>
-              </dl>
-            </article>
-          </li>
-        </ul>
-      </section>
+                    <article class="task">
+                        <div class="task-top">
+                            <span class="priority medium">Média</span>
+                            <button class="menu">•••</button>
+                        </div>
 
-      <section aria-labelledby="concluida-titulo">
-        <h3 id="concluida-titulo">Concluída</h3>
-        <ul>
-          <li>
-            <article>
-              <h4>Criar repositório do projeto</h4>
-              <dl>
-                <dt>Projeto</dt><dd>Gerenciador de tarefas</dd>
-                <dt>Responsável</dt><dd>Vitor</dd>
-                <dt>Prazo</dt><dd><time datetime="2026-08-10">10/08/2026</time></dd>
-                <dt>Prioridade</dt><dd>Média</dd>
-              </dl>
-            </article>
-          </li>
-          <li>
-            <article>
-              <h4>Organizar cronograma de estudos</h4>
-              <dl>
-                <dt>Projeto</dt><dd>Planejamento do semestre</dd>
-                <dt>Responsável</dt><dd>Beatriz</dd>
-                <dt>Prazo</dt><dd><time datetime="2026-08-08">08/08/2026</time></dd>
-                <dt>Prioridade</dt><dd>Baixa</dd>
-              </dl>
-            </article>
-          </li>
-        </ul>
-      </section>
-    </section>
-  </main>
+                        <h4>Definir paleta de cores</h4>
 
-  <footer>
-    <p>Vitor — Desenvolvimento Frontend — 2026.2</p>
-  </footer>
+                        <p>
+                            Escolher as cores principais da interface.
+                        </p>
+
+                        <div class="task-footer">
+                            <span>📅 06 Set</span>
+                            <span class="avatar">M</span>
+                        </div>
+                    </article>
+
+
+                    <article class="task">
+                        <div class="task-top">
+                            <span class="priority low">Baixa</span>
+                            <button class="menu">•••</button>
+                        </div>
+
+                        <h4>Pesquisar referências</h4>
+
+                        <p>
+                            Buscar referências visuais japonesas.
+                        </p>
+
+                        <div class="task-footer">
+                            <span>📅 07 Set</span>
+                            <span class="avatar">A</span>
+                        </div>
+                    </article>
+
+                </div>
+
+                <button class="add-column-task">+ Adicionar tarefa</button>
+            </div>
+
+
+            <!-- EM ANDAMENTO -->
+            <div class="column">
+
+                <div class="column-header">
+                    <div class="column-title">
+                        <span class="status red"></span>
+                        <h3>Em andamento</h3>
+                    </div>
+
+                    <span class="task-count">2</span>
+                </div>
+
+                <div class="tasks">
+
+                    <article class="task active">
+                        <div class="task-top">
+                            <span class="priority high">Alta</span>
+                            <button class="menu">•••</button>
+                        </div>
+
+                        <h4>Desenvolver componentes</h4>
+
+                        <p>
+                            Criar cards e elementos reutilizáveis.
+                        </p>
+
+                        <div class="task-footer">
+                            <span>📅 Hoje</span>
+                            <span class="avatar">J</span>
+                        </div>
+                    </article>
+
+
+                    <article class="task">
+                        <div class="task-top">
+                            <span class="priority medium">Média</span>
+                            <button class="menu">•••</button>
+                        </div>
+
+                        <h4>Responsividade</h4>
+
+                        <p>
+                            Adaptar o layout para celular e tablet.
+                        </p>
+
+                        <div class="task-footer">
+                            <span>📅 04 Set</span>
+                            <span class="avatar">R</span>
+                        </div>
+                    </article>
+
+                </div>
+
+                <button class="add-column-task">+ Adicionar tarefa</button>
+            </div>
+
+
+            <!-- CONCLUÍDO -->
+            <div class="column">
+
+                <div class="column-header">
+                    <div class="column-title">
+                        <span class="status done"></span>
+                        <h3>Concluído</h3>
+                    </div>
+
+                    <span class="task-count">2</span>
+                </div>
+
+                <div class="tasks">
+
+                    <article class="task completed">
+                        <div class="task-top">
+                            <span class="priority done-tag">Feito</span>
+                            <button class="menu">•••</button>
+                        </div>
+
+                        <h4>Definir objetivo</h4>
+
+                        <p>
+                            Estabelecer o objetivo principal do projeto.
+                        </p>
+
+                        <div class="task-footer">
+                            <span>✓ Concluído</span>
+                            <span class="avatar">K</span>
+                        </div>
+                    </article>
+
+
+                    <article class="task completed">
+                        <div class="task-top">
+                            <span class="priority done-tag">Feito</span>
+                            <button class="menu">•••</button>
+                        </div>
+
+                        <h4>Criar wireframe</h4>
+
+                        <p>
+                            Planejar a estrutura visual da aplicação.
+                        </p>
+
+                        <div class="task-footer">
+                            <span>✓ Concluído</span>
+                            <span class="avatar">Y</span>
+                        </div>
+                    </article>
+
+                </div>
+
+                <button class="add-column-task">+ Adicionar tarefa</button>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>一歩ずつ — Um passo de cada vez.</p>
+    </footer>
+
 </body>
 </html>
