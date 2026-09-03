@@ -181,8 +181,8 @@ body {
 
 .kanban {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 22px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
 }
 
 .column {
@@ -493,4 +493,421 @@ footer {
     .column {
         min-height: auto;
     }
+}
+/* =========================
+   E3
+========================= */
+
+.status.review {
+    background: #b58a2c;
+}
+
+
+.progress-fill {
+    width: 0;
+    transition: width 0.4s ease;
+}
+
+
+/* =========================
+   ESTADOS
+========================= */
+
+.estado {
+    min-height: 25px;
+    margin-bottom: 18px;
+
+    font-size: 12px;
+}
+
+
+.estado-carregando {
+    color: #777;
+}
+
+
+.estado-sucesso {
+    color: #27733c;
+}
+
+
+.estado-vazio {
+    padding: 12px;
+
+    color: #555;
+
+    background: #eeeeec;
+
+    border-left:
+        3px solid #777;
+}
+
+
+.estado-erro {
+    padding: 12px;
+
+    color: #a90012;
+
+    background: #fbe5e7;
+
+    border-left:
+        3px solid #c90016;
+}
+
+
+.quadro-carregando {
+    opacity: 0.35;
+}
+
+
+/* =========================================
+   RASTRO DE NANQUIM
+========================================= */
+
+.ink-trail {
+    position: fixed;
+    z-index: 9999;
+
+    pointer-events: none;
+
+    transform:
+        translate(-50%, -50%)
+        rotate(var(--rotacao));
+
+    border-radius:
+        75% 25% 70% 30% /
+        40% 60% 35% 65%;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(249, 0, 0, 0.778),
+            rgba(143, 9, 9, 0.782),
+            rgba(99, 0, 0, 0.814)
+        );
+
+    filter:
+        blur(0.35px);
+
+    box-shadow:
+        0 0 3px
+        rgba(0, 0, 0, 0.08);
+
+    animation:
+        rastroPincel
+        0.85s
+        ease-out
+        forwards;
+}
+
+
+@keyframes rastroPincel {
+
+    0% {
+        opacity: 0;
+        scale: 0.35;
+        
+    }
+
+    15% {
+        opacity: 0.85;
+    }
+
+    55% {
+        opacity: 0.42;
+    }
+
+    100% {
+        opacity: 0;
+        scale: 1.6;
+
+        filter:
+            blur(2.5px);
+    }
+}
+
+
+/* gotinhas que acompanham o pincel */
+
+.ink-trail-drop {
+    position: fixed;
+
+    z-index: 9999;
+
+    pointer-events: none;
+
+    transform:
+        translate(-50%, -50%);
+
+    border-radius:
+        50% 45% 55% 48%;
+
+    background:
+        rgba(15, 15, 15, 0.24);
+
+    animation:
+        gotaRastro
+        0.9s
+        ease-out
+        forwards;
+}
+
+
+@keyframes gotaRastro {
+
+    0% {
+        opacity: 0;
+        scale: 0.2;
+    }
+
+    25% {
+        opacity: 0.7;
+        scale: 1;
+    }
+
+    100% {
+        opacity: 0;
+        scale: 1.5;
+    }
+}
+
+
+/* =========================================
+   RESPINGO AO CLICAR
+========================================= */
+
+.ink-splash {
+    position: fixed;
+
+    z-index: 10000;
+
+    width: 1px;
+    height: 1px;
+
+    pointer-events: none;
+
+    animation:
+        splashGrupo
+        1.05s
+        ease-out
+        forwards;
+}
+
+
+/* mancha principal */
+
+.ink-splash-center {
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 52px;
+    height: 44px;
+
+    transform:
+        translate(-50%, -50%)
+        rotate(var(--centro-rotacao))
+        scale(0.1);
+
+    border-radius:
+        44% 56% 38% 62% /
+        51% 37% 63% 49%;
+
+    background:
+        radial-gradient(
+            circle at 45% 40%,
+            rgba(175, 0, 20, 0.72) 80%,
+            rgba(145, 0, 18, 0.68) 45%,
+            rgba(110, 0, 12, 0.38) 75%,
+            rgba(110, 0, 12, 0) 100%
+        );
+
+    filter:
+        blur(0.4px);
+
+    animation:
+        manchaCentral
+        0.9s
+        cubic-bezier(.2,.75,.25,1)
+        forwards;
+}
+
+
+/* mancha secundária */
+
+.ink-splash-secondary {
+    position: absolute;
+
+    width: 22px;
+    height: 17px;
+
+    transform:
+        translate(-50%, -50%)
+        rotate(25deg)
+        scale(0);
+
+    border-radius:
+        65% 35% 60% 40% /
+        40% 55% 45% 60%;
+
+    background:
+        rgba(150, 0, 18, 0.42);
+
+    filter:
+        blur(0.25px);
+
+    animation:
+        manchaSecundaria
+        0.8s
+        ease-out
+        forwards;
+}
+
+
+/* gotas lançadas pelo clique */
+
+.ink-drop {
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    border-radius:
+        50% 45% 55% 50%;
+
+    background:
+        rgba(150, 0, 18, 0.58);
+
+    transform:
+        translate(-50%, -50%)
+        scale(0.2);
+
+    animation:
+        respingoGota
+        0.85s
+        cubic-bezier(.15,.7,.25,1)
+        forwards;
+}
+
+
+@keyframes manchaCentral {
+
+    0% {
+        opacity: 0;
+        transform:
+            translate(-50%, -50%)
+            rotate(var(--centro-rotacao))
+            scale(0.05);
+    }
+
+    30% {
+        opacity: 1;
+
+        transform:
+            translate(-50%, -50%)
+            rotate(var(--centro-rotacao))
+            scale(1.4);
+    }
+
+    55% {
+        transform:
+            translate(-50%, -50%)
+            rotate(var(--centro-rotacao))
+            scale(1);
+    }
+
+    100% {
+        opacity: 0;
+
+        transform:
+            translate(-50%, -50%)
+            rotate(var(--centro-rotacao))
+            scale(1.15);
+    }
+}
+
+
+@keyframes manchaSecundaria {
+
+    0% {
+        opacity: 0;
+        scale: 0;
+    }
+
+    40% {
+        opacity: 0.75;
+        scale: 1.25;
+    }
+
+    100% {
+        opacity: 0;
+        scale: 1;
+    }
+}
+
+
+@keyframes respingoGota {
+
+    0% {
+        opacity: 0;
+
+        transform:
+            translate(-50%, -50%)
+            scale(0.15);
+    }
+
+    30% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+
+        transform:
+            translate(
+                calc(-50% + var(--gota-x)),
+                calc(-50% + var(--gota-y))
+            )
+            scale(0.8);
+    }
+}
+
+
+@keyframes splashGrupo {
+
+    0% {
+        opacity: 1;
+    }
+
+    75% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media (max-width: 1200px) {
+
+    .kanban {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .kanban {
+        grid-template-columns:
+            1fr;
+    }
+
 }
