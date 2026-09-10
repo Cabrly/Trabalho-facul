@@ -9,16 +9,18 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
 
     <link
         href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap"
         rel="stylesheet"
     >
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
@@ -50,19 +52,6 @@
 
 
     <main class="container">
-
-        <!--
-            Deve existir vazio
-            antes do JavaScript alterar.
-        -->
-
-        <p
-            class="estado"
-            data-estado
-            role="status"
-            aria-live="polite"
-        ></p>
-
 
         <section class="intro">
 
@@ -107,6 +96,138 @@
         </section>
 
 
+        <!-- CONTROLES DA E4 -->
+        <section
+            class="filtros"
+            aria-label="Busca, filtros e ordenação"
+        >
+
+            <div class="campo-filtro campo-busca">
+
+                <label for="busca">
+                    Buscar tarefa
+                </label>
+
+                <input
+                    type="search"
+                    id="busca"
+                    placeholder="Digite parte do título..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <div class="campo-filtro">
+
+                <label for="filtro-status">
+                    Status
+                </label>
+
+                <select id="filtro-status">
+
+                    <option value="todos">
+                        Todos
+                    </option>
+
+                    <option value="a-fazer">
+                        A fazer
+                    </option>
+
+                    <option value="em-andamento">
+                        Em andamento
+                    </option>
+
+                    <option value="em-revisao">
+                        Em revisão
+                    </option>
+
+                    <option value="concluido">
+                        Concluído
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="campo-filtro">
+
+                <label for="filtro-prioridade">
+                    Prioridade
+                </label>
+
+                <select id="filtro-prioridade">
+
+                    <option value="todas">
+                        Todas
+                    </option>
+
+                    <option value="alta">
+                        Alta
+                    </option>
+
+                    <option value="media">
+                        Média
+                    </option>
+
+                    <option value="baixa">
+                        Baixa
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="campo-filtro">
+
+                <label for="ordenacao">
+                    Ordenar
+                </label>
+
+                <select id="ordenacao">
+
+                    <option value="padrao">
+                        Ordem original
+                    </option>
+
+                    <option value="prazo-asc">
+                        Prazo mais próximo
+                    </option>
+
+                    <option value="prazo-desc">
+                        Prazo mais distante
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="limpar-filtros"
+                class="limpar-filtros"
+            >
+                Limpar filtros
+            </button>
+
+        </section>
+
+
+        <!--
+            Essa região já existe no HTML.
+            O JavaScript somente altera o conteúdo.
+        -->
+        <p
+            class="estado"
+            data-estado
+            role="status"
+            aria-live="polite"
+        ></p>
+
+
         <section
             class="kanban"
             id="quadro"
@@ -114,6 +235,7 @@
         >
 
 
+            <!-- A FAZER -->
             <section
                 class="column"
                 data-coluna="a-fazer"
@@ -157,6 +279,7 @@
             </section>
 
 
+            <!-- EM ANDAMENTO -->
             <section
                 class="column"
                 data-coluna="em-andamento"
@@ -202,6 +325,7 @@
             </section>
 
 
+            <!-- EM REVISÃO -->
             <section
                 class="column"
                 data-coluna="em-revisao"
@@ -247,6 +371,7 @@
             </section>
 
 
+            <!-- CONCLUÍDO -->
             <section
                 class="column"
                 data-coluna="concluido"

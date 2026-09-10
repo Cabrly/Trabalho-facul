@@ -3,9 +3,10 @@ import {
 } from "./renderizacao.js";
 
 
+
 export function renderizarEstado(
     estado,
-    dados = null
+    tarefasVisiveis
 ) {
 
     const mensagem =
@@ -20,13 +21,17 @@ export function renderizarEstado(
         );
 
 
+    /*
+        Remove as classes anteriores.
+    */
     mensagem.className =
         "estado";
 
 
-    if (
-        estado === "carregando"
-    ) {
+    /*
+        CARREGANDO
+    */
+    if (estado.carregando) {
 
         mensagem.classList.add(
             "estado-carregando"
@@ -42,7 +47,14 @@ export function renderizarEstado(
         );
 
 
+        renderizarTarefas(
+            [],
+            quadro
+        );
+
+
         return;
+
     }
 
 
@@ -51,8 +63,39 @@ export function renderizarEstado(
     );
 
 
+    /*
+        ERRO
+    */
+    if (estado.erro !== null) {
+
+        mensagem.classList.add(
+            "estado-erro"
+        );
+
+
+        mensagem.textContent =
+            estado.erro;
+
+
+        renderizarTarefas(
+            [],
+            quadro
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+        ORIGEM VAZIA
+
+        O arquivo foi carregado corretamente,
+        mas não possui nenhuma tarefa.
+    */
     if (
-        estado === "vazio"
+        estado.tarefas.length === 0
     ) {
 
         mensagem.classList.add(
@@ -61,7 +104,7 @@ export function renderizarEstado(
 
 
         mensagem.textContent =
-            "Nenhuma tarefa encontrada.";
+            "Nenhuma tarefa cadastrada na fonte de dados.";
 
 
         renderizarTarefas(
@@ -71,20 +114,28 @@ export function renderizarEstado(
 
 
         return;
+
     }
 
 
+    /*
+        RESULTADO VAZIO
+
+        Existem tarefas na fonte,
+        mas nenhuma corresponde aos
+        critérios selecionados.
+    */
     if (
-        estado === "erro"
+        tarefasVisiveis.length === 0
     ) {
 
         mensagem.classList.add(
-            "estado-erro"
+            "estado-resultado-vazio"
         );
 
 
         mensagem.textContent =
-            dados;
+            "Nenhuma tarefa corresponde aos critérios. Altere ou limpe os filtros.";
 
 
         renderizarTarefas(
@@ -94,26 +145,28 @@ export function renderizarEstado(
 
 
         return;
-    }
-
-
-    if (
-        estado === "sucesso"
-    ) {
-
-        mensagem.classList.add(
-            "estado-sucesso"
-        );
-
-
-        mensagem.textContent =
-            `${dados.length} tarefas carregadas.`;
-
-
-        renderizarTarefas(
-            dados,
-            quadro
-        );
 
     }
+
+
+    /*
+        SUCESSO
+
+        A mensagem informa quantas tarefas
+        estão aparecendo em relação ao total.
+    */
+    mensagem.classList.add(
+        "estado-sucesso"
+    );
+
+
+    mensagem.textContent =
+        `${tarefasVisiveis.length} de ${estado.tarefas.length} tarefas`;
+
+
+    renderizarTarefas(
+        tarefasVisiveis,
+        quadro
+    );
+
 }

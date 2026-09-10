@@ -1,244 +1,282 @@
 export function iniciarTinta() {
     iniciarRastro();
-    iniciarRespingo();
 }
 
 
 function iniciarRastro() {
-    let ultimaMarca = 0;
 
-    document.addEventListener("pointermove", (evento) => {
-
-        const agora = performance.now();
-
-        if (agora - ultimaMarca < 18) {
-            return;
-        }
-
-        ultimaMarca = agora;
-
-        criarMarcaPincel(
-            evento.clientX,
-            evento.clientY
+    const svg =
+        document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "svg"
         );
 
-        // ocasionalmente cria uma gotinha menor
-        if (Math.random() < 0.18) {
-            criarGotinhaRastro(
-                evento.clientX,
-                evento.clientY
-            );
-        }
-    });
-}
 
-
-function criarMarcaPincel(x, y) {
-
-    const marca =
-        document.createElement("span");
-
-    marca.classList.add("ink-trail");
-
-    const largura =
-        14 + Math.random() * 28;
-
-    const altura =
-        4 + Math.random() * 9;
-
-    marca.style.width =
-        `${largura}px`;
-
-    marca.style.height =
-        `${altura}px`;
-
-    marca.style.left =
-        `${x}px`;
-
-    marca.style.top =
-        `${y}px`;
-
-    marca.style.setProperty(
-        "--rotacao",
-        `${-20 + Math.random() * 40}deg`
+    svg.classList.add(
+        "rastro-svg"
     );
 
-    document.body.append(marca);
 
-    marca.addEventListener(
-        "animationend",
-        () => marca.remove()
-    );
-}
+    const caminho =
+        document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "path"
+        );
 
 
-function criarGotinhaRastro(x, y) {
-
-    const gota =
-        document.createElement("span");
-
-    gota.classList.add(
-        "ink-trail-drop"
+    caminho.classList.add(
+        "rastro-caminho"
     );
 
-    const tamanho =
-        2 + Math.random() * 5;
 
-    gota.style.width =
-        `${tamanho}px`;
-
-    gota.style.height =
-        `${tamanho}px`;
-
-    gota.style.left =
-        `${x + (-12 + Math.random() * 24)}px`;
-
-    gota.style.top =
-        `${y + (-12 + Math.random() * 24)}px`;
-
-    document.body.append(gota);
-
-    gota.addEventListener(
-        "animationend",
-        () => gota.remove()
+    svg.append(
+        caminho
     );
-}
 
 
-function iniciarRespingo() {
+    document.body.append(
+        svg
+    );
+
+
+    let pontos = [];
+
+    let tempoFade = null;
+
+    let desaparecendo = false;
+
 
     document.addEventListener(
-        "pointerdown",
+        "pointermove",
         (evento) => {
 
-            criarRespingo(
-                evento.clientX,
-                evento.clientY
+            /*
+                Cancela o desaparecimento
+                enquanto o mouse estiver
+                se movimentando.
+            */
+            clearTimeout(
+                tempoFade
+            );
+
+
+            desaparecendo = false;
+
+
+            caminho.classList.remove(
+                "desaparecendo"
+            );
+
+
+            /*
+                Adiciona a posição atual
+                ao mesmo caminho.
+            */
+            pontos.push({
+                x: evento.clientX,
+                y: evento.clientY
+            });
+
+
+            /*
+                Limite de pontos para o
+                rastro não ficar enorme.
+            */
+            if (
+                pontos.length > 35
+            ) {
+
+                pontos.shift();
+
+            }
+
+
+            desenharCaminho(
+                caminho,
+                pontos
+            );
+
+
+            /*
+                O rastro só começa a
+                desaparecer quando o
+                movimento realmente parar.
+            */
+            tempoFade =
+                setTimeout(
+                    () => {
+
+                        desaparecerRastro(
+                            caminho,
+                            () => {
+
+                                pontos = [];
+
+                                caminho.setAttribute(
+                                    "d",
+                                    ""
+                                );
+
+                            }
+                        );
+
+                    },
+                    100
+                );
+
+        }
+    );
+
+
+    document.addEventListener(
+        "pointerleave",
+        () => {
+
+            clearTimeout(
+                tempoFade
+            );
+
+
+            desaparecerRastro(
+                caminho,
+                () => {
+
+                    pontos = [];
+
+                    caminho.setAttribute(
+                        "d",
+                        ""
+                    );
+
+                }
             );
 
         }
     );
+
 }
 
 
-function criarRespingo(x, y) {
 
-    const grupo =
-        document.createElement("div");
+function desenharCaminho(
+    caminho,
+    pontos
+) {
 
-    grupo.classList.add(
-        "ink-splash"
-    );
-
-    grupo.style.left =
-        `${x}px`;
-
-    grupo.style.top =
-        `${y}px`;
-
-
-    // Mancha central
-    const centro =
-        document.createElement("span");
-
-    centro.classList.add(
-        "ink-splash-center"
-    );
-
-    centro.style.setProperty(
-        "--centro-rotacao",
-        `${Math.random() * 50 - 25}deg`
-    );
-
-    grupo.append(centro);
-
-
-    // Segunda mancha menor irregular
-    const secundaria =
-        document.createElement("span");
-
-    secundaria.classList.add(
-        "ink-splash-secondary"
-    );
-
-    secundaria.style.left =
-        `${-15 + Math.random() * 30}px`;
-
-    secundaria.style.top =
-        `${-12 + Math.random() * 24}px`;
-
-    grupo.append(secundaria);
-
-
-    // Gotas externas
-    const quantidade =
-        12 +
-        Math.floor(
-            Math.random() * 9
-        );
-
-
-    for (
-        let i = 0;
-        i < quantidade;
-        i++
+    if (
+        pontos.length < 2
     ) {
 
-        const gota =
-            document.createElement("span");
+        return;
 
-        gota.classList.add(
-            "ink-drop"
-        );
-
-        const angulo =
-            Math.random() *
-            Math.PI *
-            2;
-
-        const distancia =
-            25 +
-            Math.random() *
-            65;
-
-        const xFinal =
-            Math.cos(angulo) *
-            distancia;
-
-        const yFinal =
-            Math.sin(angulo) *
-            distancia;
-
-        const tamanho =
-            2 +
-            Math.random() *
-            8;
-
-        gota.style.width =
-            `${tamanho}px`;
-
-        gota.style.height =
-            `${tamanho}px`;
-
-        gota.style.setProperty(
-            "--gota-x",
-            `${xFinal}px`
-        );
-
-        gota.style.setProperty(
-            "--gota-y",
-            `${yFinal}px`
-        );
-
-        grupo.append(gota);
     }
 
 
-    document.body.append(grupo);
+    /*
+        Começa exatamente no
+        primeiro ponto.
+    */
+    let desenho =
+        `M ${pontos[0].x} ${pontos[0].y}`;
 
 
-    setTimeout(
-        () => grupo.remove(),
-        1100
+    /*
+        Curva suave entre os pontos.
+
+        Como tudo pertence ao mesmo
+        path SVG, não existem buracos
+        entre os segmentos.
+    */
+    for (
+        let i = 1;
+        i < pontos.length - 1;
+        i++
+    ) {
+
+        const atual =
+            pontos[i];
+
+
+        const proximo =
+            pontos[i + 1];
+
+
+        const meioX =
+            (
+                atual.x +
+                proximo.x
+            ) / 2;
+
+
+        const meioY =
+            (
+                atual.y +
+                proximo.y
+            ) / 2;
+
+
+        desenho +=
+            ` Q ${atual.x} ${atual.y} ${meioX} ${meioY}`;
+
+    }
+
+
+    /*
+        Liga até a posição mais recente
+        para não existir atraso visual
+        na ponta da lâmina.
+    */
+    const ultimo =
+        pontos[
+            pontos.length - 1
+        ];
+
+
+    desenho +=
+        ` L ${ultimo.x} ${ultimo.y}`;
+
+
+    caminho.setAttribute(
+        "d",
+        desenho
     );
+
+}
+
+
+
+function desaparecerRastro(
+    caminho,
+    aoTerminar
+) {
+
+    caminho.classList.add(
+        "desaparecendo"
+    );
+
+
+    const finalizar =
+        () => {
+
+            caminho.removeEventListener(
+                "transitionend",
+                finalizar
+            );
+
+
+            caminho.classList.remove(
+                "desaparecendo"
+            );
+
+
+            aoTerminar();
+
+        };
+
+
+    caminho.addEventListener(
+        "transitionend",
+        finalizar
+    );
+
 }

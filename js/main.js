@@ -13,51 +13,371 @@ import {
 } from "./tinta.js";
 
 
+
+/*
+    Fonte única de verdade da aplicação.
+
+    Não armazenamos tarefas filtradas aqui.
+    A lista visível sempre será calculada
+    novamente a partir deste estado.
+*/
+const estado = {
+
+    tarefas: [],
+
+    busca: "",
+
+    status: "todos",
+
+    prioridade: "todas",
+
+    ordenacao: "padrao",
+
+    carregando: true,
+
+    erro: null
+
+};
+
+
+
+const busca =
+    document.querySelector("#busca");
+
+
+const filtroStatus =
+    document.querySelector("#filtro-status");
+
+
+const filtroPrioridade =
+    document.querySelector("#filtro-prioridade");
+
+
+const ordenacao =
+    document.querySelector("#ordenacao");
+
+
+const limparFiltros =
+    document.querySelector("#limpar-filtros");
+
+
+
+/*
+    Recebe o estado e devolve
+    uma nova lista.
+
+    Não altera estado.tarefas.
+    Não consulta o DOM.
+*/
+function derivarTarefas(estadoAtual) {
+
+    /*
+        Criamos uma cópia.
+
+        Isso é importante principalmente
+        porque sort() altera o array
+        no qual ele é executado.
+    */
+    let tarefasVisiveis =
+        [...estadoAtual.tarefas];
+
+
+    /*
+        BUSCA
+    */
+    const textoBusca =
+        estadoAtual.busca
+            .trim()
+            .toLowerCase();
+
+
+    if (textoBusca !== "") {
+
+        tarefasVisiveis =
+            tarefasVisiveis.filter(
+                (tarefa) =>
+                    tarefa.titulo
+                        .toLowerCase()
+                        .includes(textoBusca)
+            );
+
+    }
+
+
+    /*
+        STATUS
+    */
+    if (
+        estadoAtual.status !==
+        "todos"
+    ) {
+
+        tarefasVisiveis =
+            tarefasVisiveis.filter(
+                (tarefa) =>
+                    tarefa.status ===
+                    estadoAtual.status
+            );
+
+    }
+
+
+    /*
+        PRIORIDADE
+    */
+    if (
+        estadoAtual.prioridade !==
+        "todas"
+    ) {
+
+        tarefasVisiveis =
+            tarefasVisiveis.filter(
+                (tarefa) =>
+                    tarefa.prioridade ===
+                    estadoAtual.prioridade
+            );
+
+    }
+
+
+    /*
+        ORDENAÇÃO
+
+        A ordenação acontece somente
+        na cópia criada anteriormente.
+    */
+    if (
+        estadoAtual.ordenacao ===
+        "prazo-asc"
+    ) {
+
+        tarefasVisiveis.sort(
+            (a, b) =>
+                a.prazo.localeCompare(
+                    b.prazo
+                )
+        );
+
+    }
+
+
+    if (
+        estadoAtual.ordenacao ===
+        "prazo-desc"
+    ) {
+
+        tarefasVisiveis.sort(
+            (a, b) =>
+                b.prazo.localeCompare(
+                    a.prazo
+                )
+        );
+
+    }
+
+
+    return tarefasVisiveis;
+}
+
+
+
+/*
+    Mantém os controles sincronizados
+    com o objeto de estado.
+*/
+function sincronizarControles() {
+
+    busca.value =
+        estado.busca;
+
+
+    filtroStatus.value =
+        estado.status;
+
+
+    filtroPrioridade.value =
+        estado.prioridade;
+
+
+    ordenacao.value =
+        estado.ordenacao;
+
+}
+
+
+
+/*
+    Este é o único ponto de atualização
+    da interface.
+
+    Estado
+        ↓
+    derivação
+        ↓
+    renderização
+*/
+function atualizarInterface() {
+
+    sincronizarControles();
+
+
+    /*
+        A lista visível é derivada
+        apenas uma vez neste ciclo.
+    */
+    const tarefasVisiveis =
+        derivarTarefas(estado);
+
+
+    renderizarEstado(
+        estado,
+        tarefasVisiveis
+    );
+
+}
+
+
+
+/*
+    EVENTOS DOS CONTROLES
+
+    Cada evento:
+    1. altera o estado
+    2. chama atualizarInterface()
+*/
+
+
+busca.addEventListener(
+    "input",
+    (evento) => {
+
+        estado.busca =
+            evento.target.value;
+
+
+        atualizarInterface();
+
+    }
+);
+
+
+
+filtroStatus.addEventListener(
+    "change",
+    (evento) => {
+
+        estado.status =
+            evento.target.value;
+
+
+        atualizarInterface();
+
+    }
+);
+
+
+
+filtroPrioridade.addEventListener(
+    "change",
+    (evento) => {
+
+        estado.prioridade =
+            evento.target.value;
+
+
+        atualizarInterface();
+
+    }
+);
+
+
+
+ordenacao.addEventListener(
+    "change",
+    (evento) => {
+
+        estado.ordenacao =
+            evento.target.value;
+
+
+        atualizarInterface();
+
+    }
+);
+
+
+
+limparFiltros.addEventListener(
+    "click",
+    () => {
+
+        estado.busca = "";
+
+        estado.status =
+            "todos";
+
+        estado.prioridade =
+            "todas";
+
+        estado.ordenacao =
+            "padrao";
+
+
+        atualizarInterface();
+
+    }
+);
+
+
+
 async function iniciar() {
 
     iniciarTinta();
 
 
     /*
-        Obrigatório:
-        carregando ANTES do await.
+        Estado inicial:
+        carregando antes do await.
     */
+    estado.carregando = true;
 
-    renderizarEstado(
-        "carregando"
-    );
+    estado.erro = null;
+
+
+    atualizarInterface();
 
 
     try {
 
+        /*
+            carregarTarefas apenas obtém
+            os dados.
+
+            Nenhuma regra de filtro
+            existe na API.
+        */
         const tarefas =
             await carregarTarefas();
 
 
         /*
-            Vazio não é erro.
+            O array original vindo
+            da API é armazenado no estado.
         */
-
-        if (
-            tarefas.length === 0
-        ) {
-
-            renderizarEstado(
-                "vazio"
-            );
-
-            return;
-
-        }
+        estado.tarefas =
+            tarefas;
 
 
-        renderizarEstado(
-            "sucesso",
-            tarefas
-        );
+        estado.carregando = false;
 
+        estado.erro = null;
+
+
+        atualizarInterface();
 
     } catch (erro) {
+
+        estado.carregando = false;
 
 
         if (
@@ -65,53 +385,39 @@ async function iniciar() {
             "TypeError"
         ) {
 
-            renderizarEstado(
-                "erro",
-                "Erro de rede. Não foi possível carregar as tarefas."
-            );
+            estado.erro =
+                "Erro de rede. Não foi possível carregar as tarefas.";
 
-            return;
-
-        }
-
-
-        if (
+        } else if (
             erro.name ===
             "SyntaxError"
         ) {
 
-            renderizarEstado(
-                "erro",
-                "Erro de formato. O arquivo JSON é inválido."
-            );
+            estado.erro =
+                "Erro de formato. O arquivo JSON é inválido.";
 
-            return;
-
-        }
-
-
-        if (
+        } else if (
             erro.name ===
             "ProtocolError"
         ) {
 
-            renderizarEstado(
-                "erro",
-                `Erro de protocolo. O servidor respondeu com HTTP ${erro.status}.`
-            );
+            estado.erro =
+                `Erro de protocolo. O servidor respondeu com HTTP ${erro.status}.`;
 
-            return;
+        } else {
+
+            estado.erro =
+                "Ocorreu um erro inesperado.";
 
         }
 
 
-        renderizarEstado(
-            "erro",
-            "Ocorreu um erro inesperado."
-        );
+        atualizarInterface();
 
     }
+
 }
+
 
 
 iniciar();

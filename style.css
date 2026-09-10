@@ -561,304 +561,208 @@ footer {
 
 
 /* =========================================
-   RASTRO DE NANQUIM
+   RASTRO CONTÍNUO — FRUIT NINJA
 ========================================= */
 
-.ink-trail {
+.rastro-svg {
     position: fixed;
+
+    inset: 0;
+
+    width: 100vw;
+    height: 100vh;
+
     z-index: 9999;
 
     pointer-events: none;
 
-    transform:
-        translate(-50%, -50%)
-        rotate(var(--rotacao));
+    overflow: visible;
+}
 
-    border-radius:
-        75% 25% 70% 30% /
-        40% 60% 35% 65%;
 
-    background:
-        linear-gradient(
-            90deg,
-            rgba(249, 0, 0, 0.778),
-            rgba(143, 9, 9, 0.782),
-            rgba(99, 0, 0, 0.814)
-        );
+.rastro-caminho {
+    fill: none;
+
+    stroke: #c90016;
+
+    stroke-width: 7px;
+
+    stroke-linecap: round;
+
+    stroke-linejoin: round;
+
+    opacity: 1;
 
     filter:
-        blur(0.35px);
+        drop-shadow(
+            0 0 2px
+            rgba(201, 0, 22, 0.9)
+        )
+        drop-shadow(
+            0 0 6px
+            rgba(201, 0, 22, 0.35)
+        );
 
-    box-shadow:
-        0 0 3px
-        rgba(0, 0, 0, 0.08);
-
-    animation:
-        rastroPincel
-        0.85s
-        ease-out
-        forwards;
+    transition:
+        opacity 0.25s ease-out;
 }
 
 
-@keyframes rastroPincel {
+/*
+    O caminho inteiro desaparece junto.
 
-    0% {
-        opacity: 0;
-        scale: 0.35;
-        
-    }
-
-    15% {
-        opacity: 0.85;
-    }
-
-    55% {
-        opacity: 0.42;
-    }
-
-    100% {
-        opacity: 0;
-        scale: 1.6;
-
-        filter:
-            blur(2.5px);
-    }
+    Não existem pedaços desaparecendo
+    independentemente.
+*/
+.rastro-caminho.desaparecendo {
+    opacity: 0;
 }
-
-
-/* gotinhas que acompanham o pincel */
-
-.ink-trail-drop {
-    position: fixed;
-
-    z-index: 9999;
-
-    pointer-events: none;
-
-    transform:
-        translate(-50%, -50%);
-
-    border-radius:
-        50% 45% 55% 48%;
-
-    background:
-        rgba(15, 15, 15, 0.24);
-
-    animation:
-        gotaRastro
-        0.9s
-        ease-out
-        forwards;
-}
-
-
-@keyframes gotaRastro {
-
-    0% {
-        opacity: 0;
-        scale: 0.2;
-    }
-
-    25% {
-        opacity: 0.7;
-        scale: 1;
-    }
-
-    100% {
-        opacity: 0;
-        scale: 1.5;
-    }
-}
-
-
 /* =========================================
-   RESPINGO AO CLICAR
+   IMPACTO DO CLIQUE
 ========================================= */
 
-.ink-splash {
+.slash-impact {
     position: fixed;
 
     z-index: 10000;
+
+    left: 0;
+    top: 0;
 
     width: 1px;
     height: 1px;
 
     pointer-events: none;
-
-    animation:
-        splashGrupo
-        1.05s
-        ease-out
-        forwards;
 }
 
 
-/* mancha principal */
 
-.ink-splash-center {
+.slash-impact-line {
     position: absolute;
 
     left: 0;
     top: 0;
 
-    width: 52px;
-    height: 44px;
+    width: 85px;
+    height: 6px;
 
     transform:
         translate(-50%, -50%)
-        rotate(var(--centro-rotacao))
-        scale(0.1);
+        rotate(var(--rotacao))
+        scaleX(0);
+
+    transform-origin:
+        center;
 
     border-radius:
-        44% 56% 38% 62% /
-        51% 37% 63% 49%;
+        999px;
 
     background:
-        radial-gradient(
-            circle at 45% 40%,
-            rgba(175, 0, 20, 0.72) 80%,
-            rgba(145, 0, 18, 0.68) 45%,
-            rgba(110, 0, 12, 0.38) 75%,
-            rgba(110, 0, 12, 0) 100%
+        linear-gradient(
+            90deg,
+            transparent,
+            #c90016,
+            #ff3045,
+            rgb(173, 2, 2),
+            #ff3045,
+            #c90016,
+            transparent
         );
 
-    filter:
-        blur(0.4px);
+    box-shadow:
+        0 0 8px
+        rgba(201, 0, 22, 0.7);
 
     animation:
-        manchaCentral
-        0.9s
-        cubic-bezier(.2,.75,.25,1)
-        forwards;
-}
-
-
-/* mancha secundária */
-
-.ink-splash-secondary {
-    position: absolute;
-
-    width: 22px;
-    height: 17px;
-
-    transform:
-        translate(-50%, -50%)
-        rotate(25deg)
-        scale(0);
-
-    border-radius:
-        65% 35% 60% 40% /
-        40% 55% 45% 60%;
-
-    background:
-        rgba(150, 0, 18, 0.42);
-
-    filter:
-        blur(0.25px);
-
-    animation:
-        manchaSecundaria
-        0.8s
+        impactoCorte
+        0.45s
         ease-out
         forwards;
 }
 
 
-/* gotas lançadas pelo clique */
 
-.ink-drop {
+@keyframes impactoCorte {
+
+    0% {
+        opacity: 0;
+
+        transform:
+            translate(-50%, -50%)
+            rotate(var(--rotacao))
+            scaleX(0);
+    }
+
+    30% {
+        opacity: 1;
+
+        transform:
+            translate(-50%, -50%)
+            rotate(var(--rotacao))
+            scaleX(1.2);
+    }
+
+    100% {
+        opacity: 0;
+
+        transform:
+            translate(-50%, -50%)
+            rotate(var(--rotacao))
+            scaleX(1.5);
+    }
+
+}
+
+
+
+/* =========================================
+   FRAGMENTOS DO IMPACTO
+========================================= */
+
+.slash-fragment {
     position: absolute;
 
     left: 0;
     top: 0;
 
-    border-radius:
-        50% 45% 55% 50%;
+    width: 8px;
+    height: 2px;
 
     background:
-        rgba(150, 0, 18, 0.58);
+        #c90016;
+
+    border-radius:
+        999px;
 
     transform:
         translate(-50%, -50%)
-        scale(0.2);
+        rotate(
+            calc(
+                var(--x) * 1deg
+            )
+        );
+
+    box-shadow:
+        0 0 4px
+        rgba(201, 0, 22, 0.5);
 
     animation:
-        respingoGota
-        0.85s
-        cubic-bezier(.15,.7,.25,1)
+        fragmentoCorte
+        0.55s
+        ease-out
         forwards;
 }
 
 
-@keyframes manchaCentral {
+
+@keyframes fragmentoCorte {
 
     0% {
-        opacity: 0;
-        transform:
-            translate(-50%, -50%)
-            rotate(var(--centro-rotacao))
-            scale(0.05);
-    }
-
-    30% {
         opacity: 1;
 
         transform:
             translate(-50%, -50%)
-            rotate(var(--centro-rotacao))
-            scale(1.4);
-    }
-
-    55% {
-        transform:
-            translate(-50%, -50%)
-            rotate(var(--centro-rotacao))
-            scale(1);
-    }
-
-    100% {
-        opacity: 0;
-
-        transform:
-            translate(-50%, -50%)
-            rotate(var(--centro-rotacao))
-            scale(1.15);
-    }
-}
-
-
-@keyframes manchaSecundaria {
-
-    0% {
-        opacity: 0;
-        scale: 0;
-    }
-
-    40% {
-        opacity: 0.75;
-        scale: 1.25;
-    }
-
-    100% {
-        opacity: 0;
-        scale: 1;
-    }
-}
-
-
-@keyframes respingoGota {
-
-    0% {
-        opacity: 0;
-
-        transform:
-            translate(-50%, -50%)
-            scale(0.15);
-    }
-
-    30% {
-        opacity: 1;
+            scaleX(1);
     }
 
     100% {
@@ -866,27 +770,12 @@ footer {
 
         transform:
             translate(
-                calc(-50% + var(--gota-x)),
-                calc(-50% + var(--gota-y))
+                calc(-50% + var(--x)),
+                calc(-50% + var(--y))
             )
-            scale(0.8);
-    }
-}
-
-
-@keyframes splashGrupo {
-
-    0% {
-        opacity: 1;
+            scaleX(0.4);
     }
 
-    75% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
-    }
 }
 
 /* =========================
@@ -908,6 +797,231 @@ footer {
     .kanban {
         grid-template-columns:
             1fr;
+    }
+
+}
+
+/* =========================================
+   E4 — BUSCA, FILTROS E ORDENAÇÃO
+========================================= */
+
+.filtros {
+    display: grid;
+
+    grid-template-columns:
+        minmax(220px, 2fr)
+        repeat(3, minmax(150px, 1fr))
+        auto;
+
+    align-items: end;
+
+    gap: 12px;
+
+    margin-bottom: 18px;
+
+    padding: 18px;
+
+    background: #ffffff;
+
+    border: 1px solid #dedede;
+    border-radius: 8px;
+}
+
+
+.campo-filtro {
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+
+    min-width: 0;
+}
+
+
+.campo-filtro label {
+    color: #666;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    letter-spacing: 0.5px;
+}
+
+
+.campo-filtro input,
+.campo-filtro select {
+    width: 100%;
+
+    min-height: 42px;
+
+    padding: 9px 11px;
+
+    font-family: inherit;
+    font-size: 12px;
+
+    color: #171717;
+
+    background: #f7f7f5;
+
+    border: 1px solid #d5d5d5;
+    border-radius: 5px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s,
+        background 0.2s;
+}
+
+
+.campo-filtro input:hover,
+.campo-filtro select:hover {
+    border-color: #aaa;
+}
+
+
+.campo-filtro input:focus,
+.campo-filtro select:focus {
+    background: #ffffff;
+
+    border-color: #c90016;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(201, 0, 22, 0.1);
+}
+
+
+.limpar-filtros {
+    min-height: 42px;
+
+    padding: 9px 16px;
+
+    font-family: inherit;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    color: #c90016;
+
+    background: transparent;
+
+    border:
+        1px solid #c90016;
+
+    border-radius: 5px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s,
+        color 0.2s,
+        transform 0.2s;
+}
+
+
+.limpar-filtros:hover {
+    color: #ffffff;
+
+    background: #c90016;
+}
+
+
+.limpar-filtros:active {
+    transform: scale(0.97);
+}
+
+
+.limpar-filtros:focus-visible {
+    outline:
+        3px solid
+        rgba(201, 0, 22, 0.25);
+
+    outline-offset: 2px;
+}
+
+
+/* =========================================
+   RESULTADO VAZIO
+========================================= */
+
+.estado-resultado-vazio {
+    padding: 12px;
+
+    color: #8a5a00;
+
+    background: #fff3d6;
+
+    border-left:
+        3px solid #b58a2c;
+}
+
+
+/* =========================================
+   E4 RESPONSIVO
+========================================= */
+
+@media (max-width: 1100px) {
+
+    .filtros {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+
+    .campo-busca {
+        grid-column:
+            1 / -1;
+    }
+
+
+    .limpar-filtros {
+        width: 100%;
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .filtros {
+        grid-template-columns:
+            1fr;
+
+        padding: 14px;
+    }
+
+
+    .campo-busca {
+        grid-column:
+            auto;
+    }
+
+
+    .campo-filtro input,
+    .campo-filtro select,
+    .limpar-filtros {
+        width: 100%;
+    }
+
+}
+
+
+@media (max-width: 350px) {
+
+    .filtros {
+        padding: 10px;
+        gap: 10px;
+    }
+
+
+    .campo-filtro input,
+    .campo-filtro select,
+    .limpar-filtros {
+        font-size: 11px;
     }
 
 }
