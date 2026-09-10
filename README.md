@@ -44,4 +44,4 @@ A lista exibida é derivada do estado original, sem alterar o array de tarefas c
 
 ## Página publicada
 
-[Acessar aplicação no GitHub Pages](https://SEU-USUARIO.github.io/SEU-REPOSITORIO/)
+[Acessar aplicação no GitHub Pages](https://cabrly.github.io/Trabalho-facul/)
