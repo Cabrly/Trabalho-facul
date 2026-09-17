@@ -13,6 +13,22 @@ import {
 } from "./tinta.js";
 
 
+import {
+    iniciarFundo
+} from "./fundo.js";
+
+
+import {
+    iniciarAcoes
+} from "./acoes.js";
+
+
+import {
+    carregarSalvo,
+    salvar
+} from "./persistencia.js";
+
+
 
 /*
     Fonte única de verdade da aplicação.
@@ -239,6 +255,23 @@ function atualizarInterface() {
 
 
 /*
+    Chamado sempre que uma AÇÃO altera as tarefas
+    (criar, editar, excluir, mover).
+
+    Grava no armazenamento e re-renderiza a partir
+    do mesmo estado — mantendo a fonte única.
+*/
+function aoAlterar() {
+
+    salvar(estado.tarefas);
+
+    atualizarInterface();
+
+}
+
+
+
+/*
     EVENTOS DOS CONTROLES
 
     Cada evento:
@@ -332,11 +365,45 @@ limparFiltros.addEventListener(
 
 async function iniciar() {
 
+    iniciarFundo();
+
     iniciarTinta();
 
 
     /*
-        Estado inicial:
+        Liga as interações do quadro
+        (arrastar, criar, editar, excluir, mover).
+    */
+    iniciarAcoes({ estado, aoAlterar });
+
+
+    /*
+        Se já existirem tarefas salvas no navegador,
+        elas têm prioridade sobre o dados.json.
+
+        Assim, tudo que o usuário mexeu continua
+        valendo depois de recarregar a página.
+    */
+    const salvas = carregarSalvo();
+
+    if (salvas) {
+
+        estado.tarefas = salvas;
+
+        estado.carregando = false;
+
+        estado.erro = null;
+
+
+        atualizarInterface();
+
+        return;
+
+    }
+
+
+    /*
+        Primeira execução (sem nada salvo):
         carregando antes do await.
     */
     estado.carregando = true;
@@ -371,6 +438,12 @@ async function iniciar() {
         estado.carregando = false;
 
         estado.erro = null;
+
+
+        /*
+            Guarda a semente para as próximas visitas.
+        */
+        salvar(estado.tarefas);
 
 
         atualizarInterface();
