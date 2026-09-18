@@ -45,3 +45,16 @@ A lista exibida é derivada do estado original, sem alterar o array de tarefas c
 ## Página publicada
 
 [Acessar aplicação no GitHub Pages](https://cabrly.github.io/Trabalho-facul/)
+
+## Modo com banco de dados local
+
+Para salvar as tarefas em SQLite, abra um terminal nesta pasta e execute:
+
+```bash
+python3 server.py
+```
+
+Depois acesse `http://localhost:8000`. O banco será criado automaticamente em
+`kaizen.sqlite3`, usando `dados.json` apenas para a carga inicial. A página do
+GitHub Pages continua funcionando no modo estático, com armazenamento local do
+navegador.

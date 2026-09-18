@@ -135,6 +135,14 @@ export function renderizarTarefas(
 
         menu.textContent = "•••";
 
+        const categoria = document.createElement("span");
+        categoria.classList.add("categoria");
+        categoria.textContent = tarefa.categoria || "Geral";
+
+        const etiquetas = document.createElement("div");
+        etiquetas.classList.add("task-etiquetas");
+        etiquetas.append(categoria, prioridade);
+
 
         const titulo =
             document.createElement(
@@ -211,7 +219,7 @@ export function renderizarTarefas(
 
 
         topo.append(
-            prioridade,
+            etiquetas,
             menu
         );
 

@@ -294,6 +294,25 @@ body {
     margin-bottom: 10px;
 }
 
+.task-etiquetas {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.categoria {
+    max-width: 115px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #36526d;
+    background: #e7f0f7;
+    border-radius: 3px;
+    padding: 4px 8px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
 .priority {
     font-size: 10px;
     font-weight: 700;

@@ -1,5 +1,7 @@
 import {
-    carregarTarefas
+    carregarTarefas,
+    salvarTarefasServidor,
+    servidorDisponivel
 } from "./api.js";
 
 
@@ -25,7 +27,9 @@ import {
 
 import {
     carregarSalvo,
-    salvar
+    salvar,
+    carregarCategorias,
+    salvarCategorias
 } from "./persistencia.js";
 
 
@@ -43,7 +47,9 @@ const estado = {
 
     busca: "",
 
-    status: "todos",
+    categoria: "todos",
+
+    categorias: ["Geral", ...carregarCategorias()],
 
     prioridade: "todas",
 
@@ -61,8 +67,8 @@ const busca =
     document.querySelector("#busca");
 
 
-const filtroStatus =
-    document.querySelector("#filtro-status");
+const filtroCategoria =
+    document.querySelector("#filtro-categoria");
 
 
 const filtroPrioridade =
@@ -121,18 +127,18 @@ function derivarTarefas(estadoAtual) {
 
 
     /*
-        STATUS
+    CATEGORIA
     */
     if (
-        estadoAtual.status !==
+        estadoAtual.categoria !==
         "todos"
     ) {
 
         tarefasVisiveis =
             tarefasVisiveis.filter(
                 (tarefa) =>
-                    tarefa.status ===
-                    estadoAtual.status
+                    (tarefa.categoria || "Geral") ===
+                    estadoAtual.categoria
             );
 
     }
@@ -207,8 +213,24 @@ function sincronizarControles() {
         estado.busca;
 
 
-    filtroStatus.value =
-        estado.status;
+    const categorias = [...new Set([
+        ...estado.categorias,
+        ...estado.tarefas.map((tarefa) => tarefa.categoria || "Geral")
+    ])].sort((a, b) => a.localeCompare(b, "pt-BR"));
+    estado.categorias = categorias;
+    salvarCategorias(categorias);
+
+    filtroCategoria.replaceChildren(
+        new Option("Todas as categorias", "todos"),
+        ...categorias.map((categoria) => new Option(categoria, categoria)),
+        new Option("＋ Adicionar nova categoria…", "__nova__")
+    );
+
+    if (!categorias.includes(estado.categoria)) {
+        estado.categoria = "todos";
+    }
+
+    filtroCategoria.value = estado.categoria;
 
 
     filtroPrioridade.value =
@@ -263,7 +285,15 @@ function atualizarInterface() {
 */
 function aoAlterar() {
 
-    salvar(estado.tarefas);
+    const persistiu = salvar(estado.tarefas);
+
+    salvarTarefasServidor(estado.tarefas, estado.categorias).catch((erro) => {
+        console.warn(erro.message);
+    });
+
+    if (!persistiu) {
+        console.warn("Não foi possível salvar as tarefas neste navegador.");
+    }
 
     atualizarInterface();
 
@@ -295,12 +325,21 @@ busca.addEventListener(
 
 
 
-filtroStatus.addEventListener(
+filtroCategoria.addEventListener(
     "change",
     (evento) => {
 
-        estado.status =
-            evento.target.value;
+        if (evento.target.value === "__nova__") {
+            const nova = window.prompt("Nome da nova categoria:");
+            const nome = nova ? nova.trim() : "";
+            if (nome && !estado.categorias.includes(nome)) {
+                estado.categorias.push(nome);
+                salvarCategorias(estado.categorias);
+            }
+            estado.categoria = nome || "todos";
+        } else {
+            estado.categoria = evento.target.value;
+        }
 
 
         atualizarInterface();
@@ -346,7 +385,7 @@ limparFiltros.addEventListener(
 
         estado.busca = "";
 
-        estado.status =
+        estado.categoria =
             "todos";
 
         estado.prioridade =
@@ -384,24 +423,6 @@ async function iniciar() {
         Assim, tudo que o usuário mexeu continua
         valendo depois de recarregar a página.
     */
-    const salvas = carregarSalvo();
-
-    if (salvas) {
-
-        estado.tarefas = salvas;
-
-        estado.carregando = false;
-
-        estado.erro = null;
-
-
-        atualizarInterface();
-
-        return;
-
-    }
-
-
     /*
         Primeira execução (sem nada salvo):
         carregando antes do await.
@@ -431,8 +452,10 @@ async function iniciar() {
             O array original vindo
             da API é armazenado no estado.
         */
-        estado.tarefas =
-            tarefas;
+        /* O SQLite é a fonte principal quando o servidor está ativo.
+           No modo estático, mantém o que foi salvo neste navegador. */
+        const salvas = carregarSalvo();
+        estado.tarefas = servidorDisponivel || !salvas ? tarefas : salvas;
 
 
         estado.carregando = false;
@@ -444,6 +467,9 @@ async function iniciar() {
             Guarda a semente para as próximas visitas.
         */
         salvar(estado.tarefas);
+        if (servidorDisponivel && estado.tarefas.length === 0) {
+            await salvarTarefasServidor(tarefas);
+        }
 
 
         atualizarInterface();

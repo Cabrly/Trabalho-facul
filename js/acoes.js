@@ -87,6 +87,7 @@ export function iniciarAcoes({ estado, aoAlterar }) {
             titulo: dados.titulo,
             status: dados.status,
             prioridade: dados.prioridade,
+            categoria: dados.categoria,
             prazo: dados.prazo
         });
 
@@ -519,6 +520,9 @@ export function iniciarAcoes({ estado, aoAlterar }) {
         form.prioridade.value =
             tarefa ? tarefa.prioridade : "media";
 
+        atualizarOpcoesCategorias(form);
+        form.categoria.value = tarefa ? (tarefa.categoria || "Geral") : "Geral";
+
         form.prazo.value =
             tarefa ? tarefa.prazo : hoje();
 
@@ -594,6 +598,14 @@ export function iniciarAcoes({ estado, aoAlterar }) {
             </label>
 
             <label class="campo-modal">
+                <span>Categoria</span>
+                <select
+                    name="categoria"
+                    required
+                ></select>
+            </label>
+
+            <label class="campo-modal">
                 <span>Prazo</span>
                 <input name="prazo" type="date" required>
             </label>
@@ -636,10 +648,11 @@ export function iniciarAcoes({ estado, aoAlterar }) {
                 titulo: form.titulo.value.trim(),
                 status: form.status.value,
                 prioridade: form.prioridade.value,
+                categoria: form.categoria.value.trim(),
                 prazo: form.prazo.value
             };
 
-            if (dados.titulo === "" || dados.prazo === "") {
+            if (dados.titulo === "" || dados.categoria === "" || dados.prazo === "") {
                 return;
             }
 
@@ -654,6 +667,20 @@ export function iniciarAcoes({ estado, aoAlterar }) {
 
 
         return dialog;
+    }
+
+
+    function atualizarOpcoesCategorias(form) {
+        const campo = form.categoria;
+        const categorias = [...new Set([
+            ...estado.categorias,
+            ...estado.tarefas.map((tarefa) => tarefa.categoria || "Geral")
+        ])].sort((a, b) => a.localeCompare(b, "pt-BR"));
+        const select = document.createElement("select");
+        select.name = "categoria";
+        select.required = true;
+        select.innerHTML = categorias.map((categoria) => `<option value="${categoria.replaceAll('"', '&quot;')}">${categoria}</option>`).join("");
+        campo.replaceWith(select);
     }
 
 
@@ -700,6 +727,7 @@ export function iniciarAcoes({ estado, aoAlterar }) {
             titulo: "",
             status: status,
             prioridade: "media",
+            categoria: "Geral",
             prazo: hoje()
         });
 

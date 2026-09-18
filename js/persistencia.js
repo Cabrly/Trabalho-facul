@@ -9,6 +9,22 @@
 
 
 const CHAVE = "kaizen.tarefas.v1";
+const CHAVE_CATEGORIAS = "kaizen.categorias.v1";
+
+/*
+    O localStorage é a base local do aplicativo: ele sobrevive a
+    recarregamentos e ao fechamento do navegador. A validação evita que
+    um valor salvo por engano impeça o quadro de iniciar.
+*/
+function tarefaValida(tarefa) {
+    return tarefa &&
+        typeof tarefa === "object" &&
+        typeof tarefa.id === "string" &&
+        typeof tarefa.titulo === "string" &&
+        typeof tarefa.status === "string" &&
+        typeof tarefa.prioridade === "string" &&
+        typeof tarefa.prazo === "string";
+}
 
 
 /*
@@ -35,8 +51,13 @@ export function carregarSalvo() {
 
         const dados = JSON.parse(bruto);
 
-        if (Array.isArray(dados)) {
-            return dados;
+        if (Array.isArray(dados) && dados.every(tarefaValida)) {
+            return dados.map((tarefa) => ({
+                ...tarefa,
+                categoria: typeof tarefa.categoria === "string" && tarefa.categoria.trim()
+                    ? tarefa.categoria.trim()
+                    : "Geral"
+            }));
         }
 
     } catch (erro) {
@@ -49,9 +70,7 @@ export function carregarSalvo() {
 
 
 /*
-    Grava o array de tarefas.
-    Falhas de armazenamento são silenciosas:
-    o app continua funcionando na memória.
+    Grava o array de tarefas e informa se o navegador aceitou a gravação.
 */
 export function salvar(tarefas) {
 
@@ -62,8 +81,29 @@ export function salvar(tarefas) {
             JSON.stringify(tarefas)
         );
 
+        return true;
+
     } catch (erro) {
-        /* Sem espaço ou bloqueado: não quebra a aplicação. */
+        /* Sem espaço ou bloqueado: o chamador pode informar o usuário. */
+        return false;
+    }
+}
+
+export function carregarCategorias() {
+    try {
+        const dados = JSON.parse(localStorage.getItem(CHAVE_CATEGORIAS) || "[]");
+        return Array.isArray(dados) ? dados.filter((item) => typeof item === "string" && item.trim()) : [];
+    } catch (erro) {
+        return [];
+    }
+}
+
+export function salvarCategorias(categorias) {
+    try {
+        localStorage.setItem(CHAVE_CATEGORIAS, JSON.stringify([...new Set(categorias)]));
+        return true;
+    } catch (erro) {
+        return false;
     }
 }
 
